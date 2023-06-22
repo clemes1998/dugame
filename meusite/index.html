@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>login</title>
+<link href="style.css" rel="stylesheet" type="text/css">
+<script>
+    function realizarLogin(event) {
+      event.preventDefault();
+
+      var loginCadastrado = "cadur";
+      var senhaCadastrada = "cadur321";
+
+      var loginInformado = document.getElementById("username").value;
+      var senhaInformada = document.getElementById("password").value;
+
+      if (loginCadastrado === loginInformado && senhaCadastrada === senhaInformada) {
+        alert("Bem-vindo ao sistema, " + loginInformado);
+		window.location.href = "pagina_quiz.html";
+      } else {
+        alert("Login inválido. Tente novamente");
+      }
+    }
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h2>Tela de Login</h2>
+    <form onsubmit="realizarLogin(event);">
+      <div class="form-group">
+        <label for="username">Usuário:</label>
+        <input type="text" id="username" name="username" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Senha:</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+      <div class="form-group">
+        <button type="submit">Entrar</button>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

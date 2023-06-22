@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+  <title>Quiz</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    .question {
+      margin-bottom: 20px;
+    }
+
+    .options label {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .result {
+      margin-top: 10px;
+      padding: 6px;
+      font-weight: bold;
+    }
+
+    .result.correct {
+      color: white;
+      background-color: green;
+    }
+
+    .result.incorrect {
+      color: white;
+      background-color: red;
+    }
+
+    .submit-btn {
+      display: block;
+      margin-top: 20px;
+      padding: 8px 16px;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .submit-btn:hover {
+      background-color: #45a049;
+    }
+  </style>
+   <script>
+    var questions = {
+      "perguntas": [
+        {
+          "pergunta": "Por que o livro de matemática foi à academia?",
+          "respostas": [
+            {
+              "resposta": "Para ficar mais inteligente.",
+              "correta": false
+            },
+            {
+              "resposta": "Porque queria ter uma lombada forte.",
+              "correta": false
+            },
+            {
+              "resposta": "Porque estava cheio de problemas para resolver.",
+              "correta": true
+            }
+          ]
+        },
+        {
+          "pergunta": "Qual é a capital da França?",
+          "respostas": [
+            {
+              "resposta": "Paris",
+              "correta": true
+            },
+            {
+              "resposta": "Londres",
+              "correta": false
+            },
+            {
+              "resposta": "Madri",
+              "correta": false
+            }
+          ]
+        }
+      ]
+    };
+
+    function renderQuiz() {
+      var quizContainer = document.getElementById("quiz");
+      var output = '';
+
+      for (var i = 0; i < questions.perguntas.length; i++) {
+        output += '<div class="question">';
+        output += '<p>' + questions.perguntas[i].pergunta + '</p>';
+        output += '<div class="options">';
+        for (var j = 0; j < questions.perguntas[i].respostas.length; j++) {
+          output += '<label>';
+          output +=
+            '<input type="radio" name="question' +
+            i +
+            '" value="option' +
+            (j + 1) +
+            '">' +
+            questions.perguntas[i].respostas[j].resposta;
+          output += '</label>';
+        }
+        output += '</div>';
+        output += '<div id="result' + i + '"></div>';
+        output += '</div>';
+      }
+
+      quizContainer.innerHTML = output;
+    }
+
+    function submitQuiz() {
+      var totalQuestions = questions.perguntas.length;
+      var score = 0;
+
+      for (var i = 0; i < totalQuestions; i++) {
+        var selectedOption = document.querySelector(
+          'input[name="question' + i + '"]:checked'
+        );
+        var resultElement = document.getElementById("result" + i);
+
+        if (selectedOption !== null) {
+          var selectedValue = selectedOption.value;
+          var correctAnswer = getCorrectAnswer(i);
+
+          if (selectedValue === correctAnswer) {
+            score++;
+            resultElement.innerHTML = "Resposta correta!";
+            resultElement.classList.add("correct");
+          } else {
+            resultElement.innerHTML =
+              "Resposta incorreta. A resposta correta é: " +
+              getAnswerText(i, correctAnswer);
+            resultElement.classList.add("incorrect");
+          }
+        } else {
+          resultElement.innerHTML = "Você não selecionou uma resposta.";
+          resultElement.classList.remove("correct");
+          resultElement.classList.remove("incorrect");
+        }
+      }
+
+      var totalScoreElement = document.getElementById("totalScore");
+      totalScoreElement.innerHTML =
+        "Você acertou " + score + " de " + totalQuestions + " perguntas.";
+
+      var pegarPremiosBtn = document.getElementById("pegarPremiosBtn");
+      pegarPremiosBtn.style.display = "block";
+      pegarPremiosBtn.setAttribute("data-score", score);
+    }
+
+    function getCorrectAnswerIndex(questionNumber) {
+      return questions.perguntas[questionNumber].respostas.findIndex(
+        (resposta) => resposta.correta === true
+      );
+    }
+
+    function getAnswerText(questionNumber, answerValue) {
+      var answerIndex = parseInt(answerValue.slice(-1)) - 1;
+      return questions.perguntas[questionNumber].respostas[answerIndex].resposta;
+    }
+
+    function pegarPremios() {
+      var score = parseInt(document.getElementById("pegarPremiosBtn").getAttribute("data-score"));
+      window.location.href = "premios.html?score=" + score;
+    }
+  </script>
+</head>
+<body onload="renderQuiz()">
+  <div class="container">
+    <h2>Quiz</h2>
+
+    <div id="quiz"></div>
+
+    <button class="submit-btn" onclick="submitQuiz()">Submeter</button>
+
+    <div id="totalScore"></div>
+
+    <button id="pegarPremiosBtn" class="pegar-premios-btn" onclick="pegarPremios()">Pegar Prêmios</button>
+  </div>
+</body>
+</html>
